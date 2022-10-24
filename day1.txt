@@ -1,0 +1,331 @@
+                           Data Structures & Algorithms Assignment Day1
+-----------------------------------------------------------------------------------------------------------------
+1Q)Implement a linked list using JavaScript. Link for hint : 
+    https://www.c-sharpcorner.com/article/linkedlist-implementation-in-javascript/ 
+    Create an HTML5 page and allow the user to input a node’s value. Create buttons to add a node, delete a node 
+    & print the linked list. 
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="Node">
+
+        <input type="text" id="index" value="">
+        <input type="text" id="insertvalue" value="">
+        <input type="button" value="addbutton" placeholder="addbutton" id="addnode" required>
+
+
+        <br>
+        <input type="text" id="value" value="">
+        <input type="button" value="deletebutton" placeholder="deletebutton" id="deletenode" required><br>
+
+        <script>class Node {
+
+
+                constructor(value) {
+                    this.value = value,
+                        this.next = null
+                }
+            }
+
+            class LinkedList {
+
+                //Creates a linkedlist with passed value.
+                constructor(value) {
+                    //Creates a head node
+                    this.head = {
+                        value: value,
+                        next: null
+                    };
+                    //As there is only one element in the list, head is also a tail
+                    this.tail = this.head;
+                    //Length would be 1
+                    this.length = 1;
+                }
+
+
+
+                //Insertes a node at specified index, say we want to insert 30 at index 2
+                //Current list: 10 -> 20 -> 40 -> 50
+                insert(index, value) {
+                    //Create a new Node by creating a instance of a Node class
+                    const newNode = new Node(value);
+
+                    //Counter to loop
+                    let count = 1;
+
+                    //Create a temp node to traverse through list, point it to the head
+                    //Pointing to 10
+                    let previousNode = this.head;
+
+                    //Traverse the list one node before the specified index
+                    while (count < index) {
+                        //Points temp node to its next node
+                        previousNode = previousNode.next;
+
+                        //Increase the count to compare it with index;
+                        count++;
+                    }
+                    //When the loop ends you will able have temp node pointing to the previous node of the index.
+
+                    //First, points new node's next to the current node's next, so it can hold the list ahead of its index
+                    //Current node = 20, New node = 30, So new node will be 30 -> 40 -> 50
+                    newNode.next = previousNode.next;
+
+                    //Now just point current node's next to new node.
+                    //Merge left side of the list, 10 -> 20 -> 30 -> 40 -> 50
+                    previousNode.next = newNode;
+                }
+
+
+
+                deleteNodeByValue(value) {
+                    //Current node to loop through the list
+                    let currentNode = this.head;
+
+                    //Previous node to update its pointer to next.next node
+                    let previousNode = null;
+
+                    while (currentNode != null) {
+
+                        //Check if we find the value we are looking for
+                        if (currentNode.value === value) {
+
+                            //Check if it is a head or not by comparing previous node with null
+                            if (previousNode === null) {
+                                //If it is head, then update head to nextnode
+                                this.head = currentNode.next;
+                            }
+                            else {
+                                //If it is not head then simply update previous node
+                                previousNode.next = currentNode.next;
+                            }
+                            //Reduce length by 1
+                            this.length--;
+                        }
+
+                        //Previous node will point to this node with every iteration
+                        previousNode = currentNode;
+                        //Current node will point to next node for iteration
+                        currentNode = currentNode.next;
+                    }
+                }
+
+
+
+                printList() {
+                    //Creates an empty array.
+                    let printArrayList = [];
+                    //Pointer which points to the head node
+                    let currentNode = this.head;
+                    //Start iterating from the first node till you reach the last node
+                    while (currentNode !== null) {
+                        //Add every node's value to the array
+                        printArrayList.push(currentNode.value);
+                        //Point pointer to the next node
+                        currentNode = currentNode.next;
+                    }
+                    //Return the array
+                    return printArrayList.join(' -> ');
+                }
+            }
+            console.log('Creating a LinkList at constant time O(1): 20:');
+            const myLinkedList = new LinkedList();
+
+
+            document.getElementById('addnode').addEventListener('click', function () {
+                let a = document.getElementById('index').value
+                let b = document.getElementById('insertvalue').value
+                myLinkedList.insert(a, b);
+                console.log(myLinkedList.printList());
+
+            })
+
+            document.getElementById('deletenode').addEventListener('click', function () {
+                let c = document.getElementById('value').value
+                myLinkedList.deleteNodeByValue(c);
+                console.log(myLinkedList.printList());
+            })
+        </script>
+    </div>
+</body>
+
+</html>
+-----------------------------------------------------------------------------------------------------------------
+2Q)Implement a Stack using JavaScript.Link for hint: 
+    https://www.freecodecamp.org/news/stack-5404d9735f88/ 
+    Create an HTML5 page and allow the user to input a value to be added to the stack. Create buttons to implement
+    push, pop operations & to print the stack. The stack must be printed in a table format consisting of only one 
+    column. As the user performs push and pop operations, the table must reflect the same.  
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+
+        <input type="text" id="push" placeholder="Input number">
+        <input type="button" value="pushvalue" id="pushvalue" required>
+
+        <input type="button" value="popvalue" id="popvalue" required>
+        <table id="table">
+            <th>stack</th>
+        </table>
+    </div>
+    <script src="stack.js">
+    
+    </script>
+</body>
+
+</html>
+
+
+******stack.js*****
+class Stack {
+
+    constructor()
+    {
+        this.items = [];
+    }
+  // push function
+    push(element)
+    {
+        // push element into the items
+        this.items.push(element);
+    }
+
+    // pop function
+    pop()
+    {
+        // return top most element in the stack
+        // and removes it from the stack
+        // Underflow if stack is empty
+        if (this.items.length == 0)
+            return "Underflow";
+        return this.items.pop();
+    }
+
+        printStack()
+    {
+        var str = "";
+        for (var i = 0; i < this.items.length; i++)
+            str += this.items[i] + " ";
+        return str;
+    }
+}
+// function Stack(){   var items = [];   var top = 0;   //other methods go here 
+//   Push an item in the Stack   this.push = function(element){      items[top++] = element   } //top++, first performs the operation then increment's the value 
+//   Pop an item from the Stack   this.pop = function(){      return items[--top];   } //--top, first decrements the value then performs the operation 
+  
+// }
+
+
+const stack = new Stack();
+
+document.getElementById('pushvalue').addEventListener('click',function(){
+    let a = document.getElementById('push').value
+   stack.push(a);
+   document.getElementById("table").innerHTML+=`<th>${a}</th>`;
+    // console.log(Stack.push(element) ());
+     console.log(stack.printStack());
+})
+document.getElementById('popvalue').addEventListener('click',function(){
+    // console.log(Stack.pop());
+    console.log(stack.pop());
+
+})
+
+-----------------------------------------------------------------------------------------------------------------
+3Q)Implement a Queue using JavaScript. Link for hint:
+     https://betterprogramming.pub/implementing-a-queue-in-javascript-59b332c7ff0d
+     Create an HTML5 page and allow the user to input a value to be added to the stack. Create buttons to implement
+    push, pop operations & to prin the stack. The stack must be printed in a table format consisting of only one 
+    column. As the user performs push and pop operations, the table must reflect the same.  
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+    
+        <input type="text" id="Enqueuetoqueue" placeholder="Input number">  
+        <input type="button" value="Enqueue" id="Enqueue" required>
+      
+        <input type="button" value="dequeue" id="dequeue" required>
+        <table id="table">
+            <th>queue</th>
+    </table>
+    </div>
+        <script>
+        class Queue {
+   
+            constructor(){
+              
+              this.data = [];
+              this.rear = 0;
+              this.size = 10;
+            }
+            
+            enqueue(element) {
+             if(this.rear < this.size ) {
+                   this.data[this.rear] = element;
+                   this.rear = this.rear + 1;
+              }
+           }
+           
+           dequeue() {
+            
+              if(this.isEmpty() === false) {
+                   
+                   this.rear = this.rear-1;
+                   return this.data.shift();
+              }
+           }
+           print() { 
+            for(let i =0; i < this.rear; i++) {
+               console.log(this.data[i]);
+             }
+           }
+           
+         }
+         
+         const queue = new Queue();
+        
+        document.getElementById('Enqueue').addEventListener('click',function(){
+            let a = document.getElementById('Enqueuetoqueue').value
+            queue. enqueue(a);
+           document.getElementById("table").innerHTML+=`<td>${a}</td>`;
+           
+             queue.print();
+        })
+        document.getElementById('dequeue').addEventListener('click',function(){
+           
+            console.log(Queue.dequeue());
+        
+        })
+        </script>
+</body>
+</html>
+
+
+-----------------------------------------------------------------------------------------------------------------
